@@ -45,7 +45,7 @@ export default function LivroEscolhido(props) {
                 <Image book={`/${livro.caminhoImagem}`} alt={livro.nome} />
                 <div>
                     <div className="bg-primary px-4 py-1 rounded">
-                        <button onClick={() => handleReservar(livro.key)} className="bg-blue-400 px-4 py-1 rounded">Reservar</button>
+                        <button onClick={() => handleReservar(livro.key)} className="bg-blue-400 px-4 py-1 rounded">Reservar.</button>
                     </div>
                 </div>
             </Section>
