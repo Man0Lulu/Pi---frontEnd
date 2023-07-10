@@ -1,30 +1,30 @@
-import Section from "../components/Section";
-import { useParams } from "react-router-dom";
-import Image from "../components/Images";
-import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from "react";
-import LivroContext from "../contexts/LivroContext";
-import UserContext from "../contexts/UserContext";
+import Section from "../components/Section"
+import { useParams } from "react-router-dom"
+import Image from "../components/Images"
+import { useNavigate } from 'react-router-dom'
+import { useContext, useEffect, useState } from "react"
+import LivroContext from "../contexts/LivroContext"
+import UserContext from "../contexts/UserContext"
 
 export default function LivroEscolhido(props) {
-    const { userId } = useContext(UserContext);
-    const { id } = useParams();
-    const { livros, reservaLivro, verificarReservaLivro } = useContext(LivroContext);
-    const navigate = useNavigate();
+    const { userId } = useContext(UserContext)
+    const { id } = useParams()
+    const { livros, reservaLivro, verificarReservaLivro, removerQtdLivro } = useContext(LivroContext)
+    const navigate = useNavigate()
 
-    const livro = livros.find((livro) => livro.key === id);
-    const [usuarioJaReservou, setUsuarioJaReservou] = useState(false);
+    const livro = livros.find((livro) => livro.key === id)
+    const [usuarioJaReservou, setUsuarioJaReservou] = useState(false)
 
     useEffect(() => {
         if (!livro || userId === null) {
-            return navigate('/Error');
+            return navigate('/Error')
         }
         const fetchReservaLivro = async () => {
-            const usuarioJaReservou = await verificarReservaLivro(livro.key, userId);
-            setUsuarioJaReservou(usuarioJaReservou);
+            const usuarioJaReservou = await verificarReservaLivro(livro.key, userId)
+            setUsuarioJaReservou(usuarioJaReservou)
         }
         fetchReservaLivro()
-    }, [livro, userId, verificarReservaLivro()]);
+    }, [livro, userId, verificarReservaLivro()])
 
     function handleReservar(livroId) {
         const dataHora = new Date()
@@ -34,7 +34,8 @@ export default function LivroEscolhido(props) {
         dataEntrega.setMonth(dataEntrega.getMonth() + 1)
 
         reservaLivro(livroId, userId, dataReserva, dataEntrega.toLocaleDateString())
-        navigate('/livroreservadosucesso');
+        removerQtdLivro(livroId)
+        navigate('/livroreservadosucesso')
     }
 
     return (
@@ -52,13 +53,18 @@ export default function LivroEscolhido(props) {
                     <Image book={`/${livro.caminhoImagem}`} alt={livro.nome} />
                 </div>
                 <hr className="my-4" />
+                <hr className="border-none my-2" />
+                <div className="flex flex-col mt-2">
+                    <p className="text-gray-600 font-bold flex items-center justify-center">
+                        Quantidade:
+                        <span className="text-gray-800 ml-2">{livro.quantidade}</span>
+                    </p>
+                </div>
                 <div className="flex justify-center mt-4">
                     <button
                         onClick={() => handleReservar(livro.key)}
-                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors font-bold"
-                        disabled={usuarioJaReservou}
-                    >
-                        {usuarioJaReservou ? "Já Reservado" : "Reservar"}
+                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors font-bold" disabled={usuarioJaReservou || livro.quantidade === 0}>
+                        {usuarioJaReservou ? "Já Reservado" : livro.quantidade === 0 ? "Indisponível" : "Reservar"}
                     </button>
                 </div>
             </div>

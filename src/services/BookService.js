@@ -17,6 +17,25 @@ export async function listaLivros() {
     return livros
 }
 
+//DELETE LivroQuantidade
+export async function removerQuantidadeLivro(livro) {
+    livro.quantidade -= 1
+    await fetch(`${urlApi}/livros/${livro.key}.json`, {
+      method: 'PATCH',
+      body: JSON.stringify(livro)
+    })
+}
+
+//POST LivroQuantidade
+export async function adicionarQuantidadeLivro(livro) {
+    livro.quantidade += 1
+    
+    await fetch(`${urlApi}/livros/${livro.key}.json`, {
+      method: 'PATCH',
+      body: JSON.stringify(livro)
+    })
+}
+
 //GET LivrosReservados
 export async function listaLivrosReservados(userId) {
     try {

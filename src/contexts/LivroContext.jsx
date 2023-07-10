@@ -1,15 +1,17 @@
 import { createContext, useState } from "react";
-import { listaLivros, reservarLivro, listaLivrosReservados, verificarLivrosReservados, removerLivro } from "../services/BookService";
+import { listaLivros, reservarLivro, adicionarQuantidadeLivro, listaLivrosReservados, verificarLivrosReservados, removerLivro, removerQuantidadeLivro } from "../services/BookService";
 
 const LivroContext = createContext({
     livros: [],
     livrosReservados: [],
     listarLivros: () => { },
     listarLivrosReservados: () => { },
-    reservaLivro: () => { },
-    verificarReservaLivro: () => { },
     listarLivrosPesquisados: () => { },
+    reservaLivro: () => { },
+    adicionarQtdLivro: () => { },
+    verificarReservaLivro: () => { },
     removerLivroReservado: () => { },
+    removerQtdLivro: () => { },
 })
 
 export function LivroContextProvider(props) {
@@ -62,23 +64,36 @@ export function LivroContextProvider(props) {
         }
     }
 
-    function verificarReservaLivro(livroId, userId) {
-        return verificarLivrosReservados(livroId, userId)
+    async function adicionarQtdLivro(livroId) {
+        const livro = livros.find((livro) => livroId === livro.key)
+        return await adicionarQuantidadeLivro(livro)
     }
 
-    function removerLivroReservado(livroId, userId) {
-        return removerLivro(livroId, userId)
+    async function verificarReservaLivro(livroId, userId) {
+        return await verificarLivrosReservados(livroId, userId)
+    }
+
+    async function removerLivroReservado(livroId, userId) {
+        await adicionarQtdLivro(livroId)
+        return await removerLivro(livroId, userId)
+    }
+    
+    async function removerQtdLivro(livroId) {
+        const livroVerificado = livros.find((livro) => livroId === livro.key)
+        return await removerQuantidadeLivro(livroVerificado)
     }
 
     const contexto = {
         livros,
         livrosReservados,
         listarLivros,
-        reservaLivro,
         listarLivrosPesquisados,
         listarLivrosReservados,
+        reservaLivro,
+        adicionarQtdLivro,
         verificarReservaLivro,
         removerLivroReservado,
+        removerQtdLivro,
     }
 
     return (

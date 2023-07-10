@@ -26,8 +26,8 @@ export default function MinhasReservas() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-12 mb-24">
           {livrosReservados.map((livro) => (
-            <li key={livro.key} className="bg-white rounded-lg shadow flex flex-col">
-              <Link to={`/livroescolhido/${livro.key}`} key={livro.key}>
+            <li key={livro.id} className="bg-white rounded-lg shadow flex flex-col">
+              <Link to={`/livroescolhido/${livro.id}`} key={livro.id}>
                 <div className="flex items-center justify-center overflow-hidden mt-6">
                   <Image book={livro.caminhoImagem} className="w-full h-auto object-cover" />
                 </div>
@@ -54,7 +54,7 @@ export default function MinhasReservas() {
                 <hr className="border-none my-2" />
                 <div className="flex justify-center mt-4">
                   <button
-                    onClick={() => handleRemover(livro.key)}
+                    onClick={() => handleRemover(livro.id)}
                     className="btn-remove transition duration-300 ease-in-out bg-red-500 hover:bg-red-600 focus:outline-none text-white font-semibold py-2 px-4 rounded-full">
                     Remover da Reserva
                   </button>
